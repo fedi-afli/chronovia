@@ -4,16 +4,18 @@ import jakarta.persistence.*;
 
 @Entity
 public class CartLign {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long cart_Lign_id;
 
     @ManyToOne
+    @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "watch_id")
     private Watch watch;
-
     private Integer quantity;
 
     public CartLign(Cart cart, Watch watch, Integer quantity) {
@@ -23,15 +25,14 @@ public class CartLign {
     }
 
     public CartLign() {
-
     }
 
-    public Long getId() {
-        return id;
+    public Long getCart_Lign_id() {
+        return cart_Lign_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCart_Lign_id(Long cart_Lign_id) {
+        this.cart_Lign_id = cart_Lign_id;
     }
 
     public Cart getCart() {
@@ -56,5 +57,8 @@ public class CartLign {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+    public double calculateTotal() {
+        return watch.getPrice() * this.quantity;
     }
 }

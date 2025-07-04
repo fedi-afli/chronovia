@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface WatchRepository extends JpaRepository<Watch,Integer> {
-    public Watch findByReferenceNumber(String referenceNumber);
-    List<Watch> findBySpecification_BrandNameIgnoreCase(String brandName);
+
 
 }

@@ -1,35 +1,57 @@
 package com.Chronova.ChronovaStore.models;
 
+import com.Chronova.ChronovaStore.models.types.WatchMaterial;
+import com.Chronova.ChronovaStore.models.types.WatchType;
 import jakarta.persistence.*;
 
 @Entity
+
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Watch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer watch_id;
+
+    @OneToOne(mappedBy = "watch")
+    private CartLign cartLign;
 
     private String referenceNumber;
     private double price;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "specification_id")
-    private Specification specification;
+    protected String modelName;
+    protected String brandName;
+    protected String modelDescription;
+    protected Long caseWidth;
+    protected Long caseheight;
+    @Enumerated(EnumType.STRING)
+    protected WatchMaterial watchMaterial;
+    protected Integer modelYear;
+    protected String movementCaliber;
+    @Enumerated(EnumType.STRING)
+    protected WatchType watchType;
 
-    public Watch() {}
-
-    public Watch( String referenceNumber, double price, Specification specification) {
-
+    public Watch(String referenceNumber, double price, String modelName, String brandName, String modelDescription, Long caseWidth, Long caseheight, WatchMaterial watchMaterial, Integer modelYear, String movementCaliber, WatchType watchType) {
         this.referenceNumber = referenceNumber;
         this.price = price;
-        this.specification = specification;
+        this.modelName = modelName;
+        this.brandName = brandName;
+        this.modelDescription = modelDescription;
+        this.caseWidth = caseWidth;
+        this.caseheight = caseheight;
+        this.watchMaterial = watchMaterial;
+        this.modelYear = modelYear;
+        this.movementCaliber = movementCaliber;
+        this.watchType = watchType;
     }
 
-    // Getters and Setters
+    public Watch() {
+    }
+
     public Integer getId() {
-        return id;
+        return watch_id;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.watch_id = id;
     }
 
     public String getReferenceNumber() {
@@ -48,12 +70,76 @@ public class Watch {
         this.price = price;
     }
 
-    public Specification getSpecification() {
-        return specification;
+    public String getModelName() {
+        return modelName;
     }
 
-    public void setSpecification(Specification specification) {
-        this.specification = specification;
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getModelDescription() {
+        return modelDescription;
+    }
+
+    public void setModelDescription(String modelDescription) {
+        this.modelDescription = modelDescription;
+    }
+
+    public Long getCaseheight() {
+        return caseheight;
+    }
+
+    public void setCaseheight(Long caseheight) {
+        this.caseheight = caseheight;
+    }
+
+    public Long getCaseWidth() {
+        return caseWidth;
+    }
+
+    public void setCaseWidth(Long caseWidth) {
+        this.caseWidth = caseWidth;
+    }
+
+    public WatchMaterial getWatchMaterial() {
+        return watchMaterial;
+    }
+
+    public void setWatchMaterial(WatchMaterial watchMaterial) {
+        this.watchMaterial = watchMaterial;
+    }
+
+    public Integer getModelYear() {
+        return modelYear;
+    }
+
+    public void setModelYear(Integer modelYear) {
+        this.modelYear = modelYear;
+    }
+
+    public String getMovementCaliber() {
+        return movementCaliber;
+    }
+
+    public void setMovementCaliber(String movementCaliber) {
+        this.movementCaliber = movementCaliber;
+    }
+
+    public WatchType getWatchType() {
+        return watchType;
+    }
+
+    public void setWatchType(WatchType watchType) {
+        this.watchType = watchType;
     }
 }
 

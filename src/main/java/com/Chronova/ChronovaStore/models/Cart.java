@@ -7,45 +7,27 @@ import java.util.List;
 
 @Entity
 public class Cart {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @OneToOne
-    private User user;
+    private Integer cartId;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartLign> watches = new ArrayList<>();
+    private List<CartLign> cartLigns = new ArrayList<>();
 
-    public Long getId() {
-        return id;
-    }
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Double total;
 
-    public User getUser() {
-        return user;
-    }
+    public Cart() {}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<CartLign> getWatches() {
-        return watches;
-    }
-
-    public void setWatches(List<CartLign> watches) {
-        this.watches = watches;
-    }
-
-    public Cart(User user, List<CartLign> watches) {
-        this.user = user;
-        this.watches = watches;
-    }
-
-    public Cart() {
+    public Double getCartTotalPrice() {
+        this.total = cartLigns.stream()
+                .map(CartLign::calculateTotal)
+                .reduce(0.0, Double::sum);
+        return total;
     }
 }
+
