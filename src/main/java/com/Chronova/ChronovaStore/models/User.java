@@ -10,7 +10,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+    private Integer user_id;
 
     private String password;
     private String username;
@@ -28,13 +28,13 @@ public class User {
         this.email = email;
     }
 
-    // Getters and setters...
 
-    public Long getId() {
+
+    public Integer getId() {
         return user_id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.user_id = id;
     }
 

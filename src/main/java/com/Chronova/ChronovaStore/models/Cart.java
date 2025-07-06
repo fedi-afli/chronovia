@@ -29,5 +29,37 @@ public class Cart {
                 .reduce(0.0, Double::sum);
         return total;
     }
+
+    public Integer getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(Integer cartId) {
+        this.cartId = cartId;
+    }
+
+    public List<CartLign> getCartLigns() {
+        return cartLigns;
+    }
+
+    public void setCartLigns(List<CartLign> cartLigns) {
+        this.cartLigns = cartLigns;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
 }
 
