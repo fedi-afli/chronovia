@@ -1,8 +1,7 @@
-package com.Chronova.ChronovaStore.Controllers;
+package com.Chronova.ChronovaStore.controllers;
 
 import com.Chronova.ChronovaStore.dataDTO.WatchRequestDTO;
 import com.Chronova.ChronovaStore.dataDTO.WatchSearchRecord;
-import com.Chronova.ChronovaStore.models.Watch;
 import com.Chronova.ChronovaStore.repository.WatchRepository;
 import com.Chronova.ChronovaStore.services.WatchService;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +39,7 @@ public class WatchController {
     }
     @GetMapping("/get/watch/{watch_id}")
     public WatchRequestDTO   getWatch(@RequestParam Integer watch_id ) {
-        return watchService.getWatchNyId(watch_id);
+        return watchService.getWatchById(watch_id);
 
     }
     @DeleteMapping("/delete/watch/{watch_id}")

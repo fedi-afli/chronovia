@@ -4,7 +4,8 @@ import java.util.List;
 
 public record CartRequestDTO(
         List<CartLignRequestDTO> cartLigns,
-        Double total
+        Double total,
+        Integer userID
 ) {
 
 }

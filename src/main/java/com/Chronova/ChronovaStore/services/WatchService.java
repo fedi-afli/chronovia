@@ -42,7 +42,7 @@ public class WatchService {
     }
 
 
-    public WatchRequestDTO getWatchNyId(Integer watch_id ) {
+    public WatchRequestDTO getWatchById(Integer watch_id ) {
 
         return watchToWatchRequestDTO( watchRepository.findById(watch_id).orElse(null));
 

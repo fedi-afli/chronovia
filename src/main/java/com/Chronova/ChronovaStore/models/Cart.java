@@ -21,7 +21,11 @@ public class Cart {
 
     private Double total;
 
-    public Cart() {}
+
+    public Cart() {
+        this.total=0.0;
+
+    }
 
     public Double getCartTotalPrice() {
         this.total = cartLigns.stream()
@@ -60,6 +64,10 @@ public class Cart {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+    public void addCartLign(CartLign cartLign) {
+
+        this.cartLigns.add(cartLign);
     }
 }
 
