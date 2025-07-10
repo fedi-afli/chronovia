@@ -1,6 +1,7 @@
 package com.Chronova.ChronovaStore.controllers;
 
 import com.Chronova.ChronovaStore.dataDTO.UserRequestDTO;
+import com.Chronova.ChronovaStore.dataDTO.UserSearchRecord;
 import com.Chronova.ChronovaStore.services.CartService;
 import com.Chronova.ChronovaStore.services.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,14 @@ public class UserController {
     public List<UserRequestDTO> getUsers() {
         return    userService.getUsers();
     }
+
     @GetMapping("search/user/{user_id}")
     public UserRequestDTO getUserById(@PathVariable  Integer user_id) {
         return    userService.getUserById(user_id);
+    }
+    @PostMapping("search/users")
+    public List<UserRequestDTO> searchUsers(@RequestBody UserSearchRecord filter) {
+        return userService.searchUsers(filter);
     }
 
 

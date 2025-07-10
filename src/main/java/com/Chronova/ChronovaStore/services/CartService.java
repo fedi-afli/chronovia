@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class CartService  {
@@ -40,7 +41,7 @@ public class CartService  {
 
         CartLign cartLign = new CartLign();
         cartLign.setCart(cart);
-        cartLign.setWatch(watchRepository.findById(userId).orElse(null));
+        cartLign.setWatch(watchRepository.findById(cartLignDTO.watchId()).orElse(null));
         cartLign.setQuantity(cartLignDTO.quantity());
         cartLign.setQuantity(cartLignDTO.quantity());
 
@@ -54,7 +55,7 @@ public class CartService  {
     }
 
    public CartRequestDTO cartToCartRequestDTO(Cart cart){
-       return new CartRequestDTO(List.of(),cart.getTotal(),cart.getUser().getId());
+       return new CartRequestDTO(cart.getCartLigns().stream().map(elem->new CartLignRequestDTO(elem.getQuantity(),elem.getWatch().getId())).collect(Collectors.toUnmodifiableList()), cart.getTotal(),cart.getUser().getId());
    }
 
 
