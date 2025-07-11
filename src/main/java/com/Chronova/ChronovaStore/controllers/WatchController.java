@@ -43,8 +43,8 @@ public class WatchController {
 
     }
     @DeleteMapping("/delete/watch/{watch_id}")
-    public void deleteWatch(@PathVariable Integer watch_id) {
-        watchService.deleteWatch(watch_id);
+    public Boolean deleteWatch(@PathVariable Integer watch_id) {
+       return   watchService.deleteWatch(watch_id);
     }
 
 

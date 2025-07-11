@@ -47,8 +47,11 @@ public class WatchService {
         return watchToWatchRequestDTO( watchRepository.findById(watch_id).orElse(null));
 
     }
-    public void deleteWatch(Integer watch_id){
+
+
+    public Boolean deleteWatch(Integer watch_id){
         watchRepository.deleteById(watch_id);
+        return true;
     }
 
     public List<WatchRequestDTO> searchWatches(WatchSearchRecord filter) {

@@ -22,5 +22,33 @@ public class Order {
         this.orderDate = LocalDateTime.now();
     }
 
+    public Order(Cart cart, LocalDateTime now) {
+        this.cart=cart;
+        this.orderDate = now;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
     // Getters and setters...
 }

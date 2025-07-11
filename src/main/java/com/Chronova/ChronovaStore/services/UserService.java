@@ -67,4 +67,8 @@ public class UserService {
     }
 
 
+    public Boolean deleteUser(Integer userId) {
+         userRepository.deleteById(userId);
+         return true;
+    }
 }

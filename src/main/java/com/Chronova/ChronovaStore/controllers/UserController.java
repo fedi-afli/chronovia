@@ -35,6 +35,11 @@ public class UserController {
         return userService.searchUsers(filter);
     }
 
+    @GetMapping("/delete/user/{user_id}")
+    public Boolean deleteUser(@PathVariable  Integer user_id) {
+       return  userService.deleteUser(user_id);
+    }
+
 
 
 }
