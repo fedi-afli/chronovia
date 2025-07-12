@@ -1,7 +1,7 @@
 package com.Chronova.ChronovaStore.controllers;
 
 import com.Chronova.ChronovaStore.dataDTO.OrderRequestDTO;
-import com.Chronova.ChronovaStore.services.OrderService;
+import com.Chronova.ChronovaStore.services.CartService;
 import com.Chronova.ChronovaStore.services.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,22 +12,31 @@ import java.util.stream.Collectors;
 @RequestMapping("api")
 public class OrderController {
 
-    private final OrderService orderService;
-    private final UserService userService;
 
-    public OrderController(OrderService orderService, UserService userService) {
-        this.orderService = orderService;
+    private final UserService userService;
+    private final CartService cartService;
+
+    public OrderController( UserService userService, CartService cartService) {
+
         this.userService = userService;
+        this.cartService = cartService;
     }
 
     @PostMapping
     @RequestMapping("/order/confirm")
     public OrderRequestDTO confirmOrder(@RequestBody OrderRequestDTO orderRequestDTO){
-      return orderService.orderTOOrderRequestDTO(  orderService.saveOrder(orderRequestDTO));
+      return cartService.orderTOOrderRequestDTO(  cartService.saveOrder(orderRequestDTO));
     }
     @PostMapping
     @RequestMapping("/orders/{user_id}")
     public List<OrderRequestDTO> getAllOrdersForUser(@PathVariable("user_id") Integer user_id){
-        return  orderService.getAllOrdersForUser( user_id).stream().map(orderService::orderTOOrderRequestDTO).collect(Collectors.toUnmodifiableList());
+        return  cartService.getAllOrdersForUser( user_id).stream().map(cartService::orderTOOrderRequestDTO).collect(Collectors.toUnmodifiableList());
+    }
+
+    @GetMapping
+    @RequestMapping("/order/confirm/{user_id}")
+    public OrderRequestDTO ConfirmCart(@PathVariable("user_id") Integer user_id){
+        return cartService.orderTOOrderRequestDTO(cartService.confirmCart(user_id));
+
     }
 }

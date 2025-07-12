@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+
 public class Cart {
 
     @Id
@@ -26,6 +27,8 @@ public class Cart {
         this.total=0.0;
 
     }
+
+
 
     public Double getCartTotalPrice() {
         this.total = cartLigns.stream()

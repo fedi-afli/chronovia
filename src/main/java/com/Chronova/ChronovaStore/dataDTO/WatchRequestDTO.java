@@ -1,7 +1,10 @@
 package com.Chronova.ChronovaStore.dataDTO;
 
+import com.Chronova.ChronovaStore.models.Picture;
 import com.Chronova.ChronovaStore.models.types.WatchMaterial;
 import com.Chronova.ChronovaStore.models.types.WatchType;
+
+import java.util.List;
 
 public record WatchRequestDTO(
         String referenceNumber,
@@ -25,5 +28,6 @@ public record WatchRequestDTO(
         boolean isSelfWind,
         Integer powerReserveHours,
         Integer jewelCount
+
 ) {
 }

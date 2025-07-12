@@ -22,11 +22,6 @@ public class CartController {
         return cartService.cartToCartRequestDTO( cartService.addCartLignToCart(user_id,cartLignDTO));
     }
 
-//    @GetMapping("/confim/cart/{cart_id}")
-//    public OrderRequestDTO  confimCart(@PathVariable("cart_id") Integer cart_id){
-//        return cartService.confirmCart(Integer  cart_id);
-//    }
-
 
 
 }

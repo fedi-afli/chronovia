@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record OrderRequestDTO(
        Integer userId,
-       LocalDateTime orderDate
+       LocalDateTime orderDate,
+       Double total
 ) {
 }

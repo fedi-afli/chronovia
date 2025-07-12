@@ -2,11 +2,9 @@ package com.Chronova.ChronovaStore.services;
 
 import com.Chronova.ChronovaStore.dataDTO.WatchRequestDTO;
 import com.Chronova.ChronovaStore.dataDTO.WatchSearchRecord;
-import com.Chronova.ChronovaStore.models.MechanicalWatch;
-import com.Chronova.ChronovaStore.models.QuartzWatch;
-import com.Chronova.ChronovaStore.models.Watch;
-import com.Chronova.ChronovaStore.models.WatchSpecifications;
+import com.Chronova.ChronovaStore.models.*;
 import com.Chronova.ChronovaStore.models.types.WatchType;
+import com.Chronova.ChronovaStore.repository.PictureRepository;
 import com.Chronova.ChronovaStore.repository.WatchRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -19,32 +17,32 @@ import java.util.stream.Collectors;
 
 @Service
 public class WatchService {
-    private WatchRepository watchRepository;
+    private final WatchRepository watchRepository;
+    private final  PictureRepository  pictureRepository;
 
 
-    public WatchService(WatchRepository watchRepository) {
+    public WatchService(WatchRepository watchRepository, PictureRepository pictureRepository) {
         this.watchRepository = watchRepository;
+        this.pictureRepository = pictureRepository;
     }
 
 
-    public WatchRequestDTO save(WatchRequestDTO watchRequestDTO) {
+    public Watch save(WatchRequestDTO watchRequestDTO) {
         Watch watch = watchRequest_to_watch(watchRequestDTO);
         Watch savedWatch = watchRepository.save(watch);
-        return watchToWatchRequestDTO(savedWatch);
+        return savedWatch;
     }
 
 
-    public List<WatchRequestDTO> getAllWatches() {
-        return watchRepository.findAll().stream()
-                .map(this::watchToWatchRequestDTO)
-                .collect(Collectors.toList());
+    public List<Watch> getAllWatches() {
+        return watchRepository.findAll();
 
     }
 
 
-    public WatchRequestDTO getWatchById(Integer watch_id ) {
+    public Watch getWatchById(Integer watch_id ) {
 
-        return watchToWatchRequestDTO( watchRepository.findById(watch_id).orElse(null));
+        return watchRepository.findById(watch_id).orElse(null);
 
     }
 
@@ -77,6 +75,8 @@ public class WatchService {
                 .map(this::watchToWatchRequestDTO)
                 .collect(Collectors.toList());
     }
+
+
 
 
 
@@ -120,6 +120,7 @@ public class WatchService {
     }
 
     public WatchRequestDTO watchToWatchRequestDTO(Watch watch) {
+
         if (watch instanceof QuartzWatch quartzWatch) {
             return new WatchRequestDTO(
                     quartzWatch.getReferenceNumber(),
@@ -138,7 +139,7 @@ public class WatchService {
                     quartzWatch.getAccuracy(),
                     false,        // isSelfWind
                     null,         // powerReserveHours
-                    null          // jewelCount
+                    null// jewelCount
             );
         } else if (watch instanceof MechanicalWatch mechWatch) {
             return new WatchRequestDTO(
@@ -159,6 +160,7 @@ public class WatchService {
                     mechWatch.isSelfWind(),
                     mechWatch.getPowerReserveHours(),
                     mechWatch.getJewelCount()
+
             );
         } else {
             // fallback for base Watch or unknown subtype
@@ -179,7 +181,8 @@ public class WatchService {
                     null,   // accuracy
                     false,  // isSelfWind
                     null,   // powerReserveHours
-                    null    // jewelCount
+                    null// jewelCount
+
             );
         }
     }

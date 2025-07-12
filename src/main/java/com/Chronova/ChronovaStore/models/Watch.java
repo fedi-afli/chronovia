@@ -4,6 +4,9 @@ import com.Chronova.ChronovaStore.models.types.WatchMaterial;
 import com.Chronova.ChronovaStore.models.types.WatchType;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -28,6 +31,10 @@ public class Watch {
     protected String movementCaliber;
     @Enumerated(EnumType.STRING)
     protected WatchType watchType;
+
+    @OneToMany(mappedBy = "watch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Picture> pictures = new ArrayList<>();
+
 
     public Watch(String referenceNumber, double price, String modelName, String brandName, String modelDescription, Long caseWidth, Long caseheight, WatchMaterial watchMaterial, Integer modelYear, String movementCaliber, WatchType watchType) {
         this.referenceNumber = referenceNumber;
