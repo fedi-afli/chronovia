@@ -40,7 +40,7 @@ public class WatchController {
 
     }
     @GetMapping("/get/watch/{watch_id}")
-    public WatchRequestDTO   getWatchById(@RequestParam Integer watch_id ) {
+    public WatchRequestDTO   getWatch(@RequestParam Integer watch_id ) {
         return watchService.watchToWatchRequestDTO(  watchService.getWatchById(watch_id));
 
     }

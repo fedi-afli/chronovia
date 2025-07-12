@@ -37,11 +37,11 @@ public class CartService {
     }
 
     public Cart getCartForUser(Integer userId) {
-        return cartRepository.findByUser_Id(userId);
+        return cartRepository.findByUserId(userId);
     }
 
     public Cart addCartLignToCart(Integer userId, CartLignRequestDTO cartLignDTO) {
-        Cart cart = cartRepository.findByUser_Id(userId);
+        Cart cart = cartRepository.findByUserId(userId);
 
         if (cart == null) {
             throw new RuntimeException("Cart not found for user ID: " + userId);
@@ -103,7 +103,7 @@ public class CartService {
     }
 
     public Order confirmCart(Integer user_id) {
-        Cart cart = cartRepository.findByUser_Id(user_id);
+        Cart cart = cartRepository.findByUserId(user_id);
         if (cart == null) throw new RuntimeException("Cart not found");
 
         Order order = new Order(cart.getUser().getId(), cart.getTotal());

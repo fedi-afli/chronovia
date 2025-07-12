@@ -19,9 +19,7 @@ public class OrderLign {
 
     private Integer quantity;
 
-    public OrderLign() {
 
-    }
 
 
 
