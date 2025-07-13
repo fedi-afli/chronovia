@@ -7,6 +7,7 @@ import com.Chronova.ChronovaStore.repository.PictureRepository;
 import com.Chronova.ChronovaStore.repository.WatchRepository;
 import com.Chronova.ChronovaStore.services.PictureService;
 import com.Chronova.ChronovaStore.services.WatchService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class WatchController {
     private final WatchService watchService;
     private final PictureService pictureService;
@@ -25,10 +27,12 @@ public class WatchController {
         this.pictureService = pictureService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save/watch")
     public WatchRequestDTO saveWatch(@RequestBody WatchRequestDTO watchRequestDTO) {
         return watchService.watchToWatchRequestDTO( watchService.save(watchRequestDTO));
     }
+    
     @PostMapping("/search/watch")
     public List<WatchRequestDTO> searchWatches(@RequestBody WatchSearchRecord filter) {
         return watchService.searchWatches(filter);
@@ -38,11 +42,14 @@ public class WatchController {
     public List<WatchRequestDTO> getWatch() {
         return watchService.getAllWatches().stream().map(watchService::watchToWatchRequestDTO).collect(Collectors.toList());
 
+    
     }
     @GetMapping("/get/watch/{watch_id}")
     public WatchRequestDTO   getWatch(@RequestParam Integer watch_id ) {
         return watchService.watchToWatchRequestDTO(  watchService.getWatchById(watch_id));
 
+    
+    @PreAuthorize("hasRole('ADMIN')")
     }
     @DeleteMapping("/delete/watch/{watch_id}")
     public Boolean deleteWatch(@PathVariable Integer watch_id) {

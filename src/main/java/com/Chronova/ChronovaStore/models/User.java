@@ -1,6 +1,9 @@
 package com.Chronova.ChronovaStore.models;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -8,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User{
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +20,8 @@ public class User{
     private String password;
 
     private String username;
+    
+    @Column(unique = true)
     private String email;
     
     private boolean enabled = false;
@@ -30,6 +35,8 @@ public class User{
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime lastLoginAt;
 
     public User() {}
 
@@ -37,6 +44,17 @@ public class User{
         this.password = password;
         this.username = username;
         this.email = email;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public Integer getId() {
@@ -47,6 +65,7 @@ public class User{
         this.user_id = id;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -55,6 +74,7 @@ public class User{
         this.password = password;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
@@ -79,6 +99,7 @@ public class User{
         this.cart = cart;
     }
 
+    @Override
     public boolean isAccountNonExpired() {
         return accountNonExpired;
     }
@@ -87,6 +108,7 @@ public class User{
         this.accountNonExpired = accountNonExpired;
     }
 
+    @Override
     public boolean isAccountNonLocked() {
         return accountNonLocked;
     }
@@ -95,6 +117,7 @@ public class User{
         this.accountNonLocked = accountNonLocked;
     }
 
+    @Override
     public boolean isCredentialsNonExpired() {
         return credentialsNonExpired;
     }
@@ -113,5 +136,21 @@ public class User{
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 }
