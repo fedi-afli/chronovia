@@ -48,8 +48,7 @@ public class WatchController {
     public WatchRequestDTO   getWatch(@RequestParam Integer watch_id ) {
         return watchService.watchToWatchRequestDTO(  watchService.getWatchById(watch_id));
 
-    
-    @PreAuthorize("hasRole('ADMIN')")
+
     }
     @DeleteMapping("/delete/watch/{watch_id}")
     public Boolean deleteWatch(@PathVariable Integer watch_id) {

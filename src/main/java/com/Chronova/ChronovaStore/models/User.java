@@ -1,5 +1,6 @@
 package com.Chronova.ChronovaStore.models;
 
+import com.Chronova.ChronovaStore.models.types.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +28,7 @@ public class User implements UserDetails {
     private boolean enabled = false;
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
-    private boolean credentialsNonExpired = true;
+
     
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
@@ -119,11 +120,11 @@ public class User implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+        return accountNonExpired;
     }
 
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+        this.accountNonExpired = credentialsNonExpired;
     }
 
     public void setEnabled(boolean enabled) {

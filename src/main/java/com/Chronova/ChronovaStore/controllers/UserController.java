@@ -20,7 +20,7 @@ public class UserController {
         this.cartService = cartService;
     }
     
-    // Note: User creation is now handled by AuthController for proper security
+
     
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("get/user")

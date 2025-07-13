@@ -27,15 +27,21 @@ public class UserService {
         this.userRepository = userRepository;
         this.cartRepository = cartRepository;
         this.passwordEncoder = passwordEncoder;
-
     }
 
+    // You can complete this method if you want to create/save a user
     public UserRequestDTO saveUser(UserRequestDTO userDTO) {
-
-    // Note: User creation is now handled by AuthService for proper security
-    public List<UserRequestDTO> getUsers() {
-        return userRepository.findAll().stream().map(this::usertoUserDTO).collect(Collectors.toList());
+        // Normally you’d map userDTO to a User entity, encode password, etc.
+        // Not implemented here as the comment says AuthService handles it
+        return null;
     }
+
+    public List<UserRequestDTO> getUsers() {
+        return userRepository.findAll().stream()
+                .map(this::usertoUserDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<UserRequestDTO> searchUsers(UserSearchRecord filter) {
         Specification<User> spec = UserSpecifications.withAdvancedFilters(
                 filter.username(),
@@ -47,7 +53,6 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    
     public UserRequestDTO usertoUserDTO(User user) {
         return new UserRequestDTO(
                 user.getId(),
@@ -59,14 +64,15 @@ public class UserService {
                 user.getLastLoginAt()
         );
     }
-    
+
     public UserRequestDTO getUserById(Integer id) {
-        return usertoUserDTO( userRepository.findById(id).orElse(null));
+        return userRepository.findById(id)
+                .map(this::usertoUserDTO)
+                .orElse(null);
     }
 
-
     public Boolean deleteUser(Integer userId) {
-         userRepository.deleteById(userId);
-         return true;
+        userRepository.deleteById(userId);
+        return true;
     }
 }
