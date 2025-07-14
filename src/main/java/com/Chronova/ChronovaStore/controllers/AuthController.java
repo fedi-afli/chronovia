@@ -2,10 +2,13 @@ package com.Chronova.ChronovaStore.controllers;
 
 import com.Chronova.ChronovaStore.dataDTO.*;
 import com.Chronova.ChronovaStore.services.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -44,4 +47,22 @@ public class AuthController {
         MessageResponseDTO response = authService.resendVerificationEmail(email);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/verify-email-redirect")
+    public void redirectToEmailVerification(@RequestParam String token, HttpServletResponse response) throws IOException {
+        System.out.println("called");
+        String redirectUrl = "http://localhost:3000/verify-email?token=" + token;
+        response.sendRedirect(redirectUrl);
+    }
+        @PostMapping("/request-password-reset")
+        public ResponseEntity<MessageResponseDTO> requestPasswordReset(@RequestParam String email) {
+            MessageResponseDTO response = authService.requestPasswordReset(email);
+            return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<MessageResponseDTO> resetPassword(@RequestBody PasswordResetRequestDTO request) {
+        MessageResponseDTO response = authService.resetPassword(request.token(), request.newPassword());
+        return ResponseEntity.ok(response);
+    }
+
 }

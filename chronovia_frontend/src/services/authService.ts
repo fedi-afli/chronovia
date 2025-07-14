@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AuthResponse, SignUpRequest, SignInRequest, MessageResponse } from '../types/auth';
+import type {AuthResponse, SignUpRequest, SignInRequest, MessageResponse} from '../types/auth';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 

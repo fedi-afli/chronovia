@@ -28,7 +28,7 @@ public class EmailService {
     private String buildVerificationEmailContent(String token) {
         return "Welcome to Chronova Store!\n\n" +
                "Please verify your email address by clicking the link below:\n" +
-               "http://localhost:8080/api/auth/verify-email?token=" + token + "\n\n" +
+                "http://localhost:8080/api/auth/verify-email-redirect?token=" + token + "\n\n" +
                "This link will expire in 24 hours.\n\n" +
                "If you didn't create an account with us, please ignore this email.\n\n" +
                "Best regards,\n" +
@@ -54,4 +54,5 @@ public class EmailService {
                "Best regards,\n" +
                "Chronova Store Team";
     }
+
 }
