@@ -11,7 +11,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="App">
+        <div className="min-h-screen bg-gray-50">
           <Routes>
             {/* Public Routes */}
             <Route path="/signin" element={<SignIn />} />
