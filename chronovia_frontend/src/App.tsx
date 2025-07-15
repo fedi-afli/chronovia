@@ -6,6 +6,8 @@ import { SignIn } from './components/auth/SignIn';
 import { SignUp } from './components/auth/SignUp';
 import { EmailVerification } from './components/auth/EmailVerification';
 import { Dashboard } from './components/Dashboard';
+import {RequestPasswordResetEmail} from "./components/auth/RequestPasswordResetEmail.tsx";
+import {RequestPasswordReset} from "./components/auth/RequestPasswordReset.tsx";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/verify-email" element={<EmailVerification />} />
+              <Route path="/request-password-reset" element={<RequestPasswordResetEmail />} />
+              <Route path="/reset-password" element={<RequestPasswordReset />} />
             
             {/* Protected Routes */}
             <Route 

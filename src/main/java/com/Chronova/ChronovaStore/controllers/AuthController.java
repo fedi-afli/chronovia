@@ -58,6 +58,11 @@ public class AuthController {
             MessageResponseDTO response = authService.requestPasswordReset(email);
             return ResponseEntity.ok(response);
     }
+    @GetMapping("/reset-password-redirect")
+    public void redirectToResetPassword(@RequestParam String token, HttpServletResponse response) throws IOException {
+        String redirectUrl = "http://localhost:3000/reset-password?token=" + token;
+        response.sendRedirect(redirectUrl);
+    }
 
     @PostMapping("/reset-password")
     public ResponseEntity<MessageResponseDTO> resetPassword(@RequestBody PasswordResetRequestDTO request) {

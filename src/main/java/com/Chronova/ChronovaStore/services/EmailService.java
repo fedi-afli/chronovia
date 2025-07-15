@@ -48,11 +48,11 @@ public class EmailService {
     private String buildPasswordResetEmailContent(String resetToken) {
         return "Password Reset Request\n\n" +
                "You have requested to reset your password. Click the link below to reset it:\n" +
-               "http://localhost:8080/api/auth/reset-password?token=" + resetToken + "\n\n" +
+                "http://localhost:3000/reset-password?token=" + resetToken + "\n\n" +
                "This link will expire in 1 hour.\n\n" +
                "If you didn't request this, please ignore this email.\n\n" +
                "Best regards,\n" +
-               "Chronova Store Team";
+               "Chronovia Store Team";
     }
 
 }
