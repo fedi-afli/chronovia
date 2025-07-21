@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type {User, AuthResponse} from '../types/auth';
+import type { User, AuthResponse } from '../types/auth';
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (authResponse: AuthResponse) => void;
+  login: (authResponse: AuthResponse) => void;  // <-- fixed here
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Check for stored auth data on app load
-    const storedToken = localStorage.getItem('token');
+    const storedToken = localStorage.getItem('jwt_token');
     const storedUser = localStorage.getItem('user');
 
     if (storedToken && storedUser) {
@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(JSON.parse(storedUser));
       } catch (error) {
         console.error('Error parsing stored user data:', error);
-        localStorage.removeItem('token');
+        localStorage.removeItem('jwt_token');
         localStorage.removeItem('user');
       }
     }
@@ -58,14 +58,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     setUser(userData);
     setToken(authResponse.token);
-    localStorage.setItem('token', authResponse.token);
+
+    // ✅ Save to localStorage
+    localStorage.setItem('jwt_token', authResponse.token);
     localStorage.setItem('user', JSON.stringify(userData));
+
+    console.log("✅ Token saved:", authResponse.token);
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('token');
+    localStorage.removeItem('jwt_token');
     localStorage.removeItem('user');
   };
 

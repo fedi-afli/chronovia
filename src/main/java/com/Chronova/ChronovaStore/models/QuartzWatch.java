@@ -24,7 +24,7 @@ public class QuartzWatch extends Watch{
             String movementCaliber,
             WatchType watchType,
             String batteryType,
-            boolean isSolar,
+            Boolean isSolar,
             Integer accuracy
     ) {
         super(referenceNumber, price, modelName, brandName, modelDescription, caseWidth, caseheight, watchMaterial, modelYear, movementCaliber, watchType);

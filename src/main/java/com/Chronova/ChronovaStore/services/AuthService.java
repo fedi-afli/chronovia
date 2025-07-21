@@ -113,7 +113,7 @@ public class AuthService {
         String jwt = jwtUtils.generateToken(user);
 
         return new AuthResponseDTO(
-                jwt,
+                jwt,"",
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),

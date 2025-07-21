@@ -6,12 +6,15 @@ import com.Chronova.ChronovaStore.models.*;
 import com.Chronova.ChronovaStore.models.types.WatchType;
 import com.Chronova.ChronovaStore.repository.PictureRepository;
 import com.Chronova.ChronovaStore.repository.WatchRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,13 +29,25 @@ public class WatchService {
         this.pictureRepository = pictureRepository;
     }
 
-
-    public Watch save(WatchRequestDTO watchRequestDTO) {
-        Watch watch = watchRequest_to_watch(watchRequestDTO);
-        Watch savedWatch = watchRepository.save(watch);
-        return savedWatch;
+    @Transactional
+    public Watch save(WatchRequestDTO watchRequestDTO, List<MultipartFile> pictureFiles) throws IOException {
+        try {
+            Watch savedWatch = watchRepository.save(watchRequest_to_watch( watchRequestDTO));
+            if (pictureFiles != null && !pictureFiles.isEmpty()) {
+                for (MultipartFile file : pictureFiles) {
+                    Picture picture = new Picture();
+                    picture.setWatch(savedWatch);
+                    picture.setImageData(file.getBytes());
+                    pictureRepository.save(picture);
+                }
+            }
+            return savedWatch;
+        } catch (Exception e) {
+            // Log full stack trace
+            e.printStackTrace();
+            throw e;
+        }
     }
-
 
     public List<Watch> getAllWatches() {
         return watchRepository.findAll();
@@ -123,6 +138,7 @@ public class WatchService {
 
         if (watch instanceof QuartzWatch quartzWatch) {
             return new WatchRequestDTO(
+                    quartzWatch.getId(),
                     quartzWatch.getReferenceNumber(),
                     quartzWatch.getPrice(),
                     quartzWatch.getModelName(),
@@ -143,6 +159,7 @@ public class WatchService {
             );
         } else if (watch instanceof MechanicalWatch mechWatch) {
             return new WatchRequestDTO(
+                    mechWatch.getId(),
                     mechWatch.getReferenceNumber(),
                     mechWatch.getPrice(),
                     mechWatch.getModelName(),
@@ -165,6 +182,7 @@ public class WatchService {
         } else {
             // fallback for base Watch or unknown subtype
             return new WatchRequestDTO(
+                    watch.getId(),
                     watch.getReferenceNumber(),
                     watch.getPrice(),
                     watch.getModelName(),

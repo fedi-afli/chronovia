@@ -20,13 +20,11 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final CartRepository cartRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, CartRepository cartRepository, PasswordEncoder passwordEncoder) {
+
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.cartRepository = cartRepository;
-        this.passwordEncoder = passwordEncoder;
+
     }
 
     // You can complete this method if you want to create/save a user

@@ -3,13 +3,16 @@ package com.Chronova.ChronovaStore.controllers;
 import com.Chronova.ChronovaStore.dataDTO.WatchRequestDTO;
 import com.Chronova.ChronovaStore.dataDTO.WatchSearchRecord;
 import com.Chronova.ChronovaStore.models.Picture;
+import com.Chronova.ChronovaStore.models.Watch;
 import com.Chronova.ChronovaStore.repository.PictureRepository;
 import com.Chronova.ChronovaStore.repository.WatchRepository;
 import com.Chronova.ChronovaStore.services.PictureService;
 import com.Chronova.ChronovaStore.services.WatchService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +30,15 @@ public class WatchController {
         this.pictureService = pictureService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/save/watch")
-    public WatchRequestDTO saveWatch(@RequestBody WatchRequestDTO watchRequestDTO) {
-        return watchService.watchToWatchRequestDTO( watchService.save(watchRequestDTO));
-    }
     
+    @PostMapping("/save/watch")
+    public WatchRequestDTO saveWatch(
+            @RequestPart("watch") WatchRequestDTO watchRequestDTO,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
+
+        Watch savedWatch = watchService.save(watchRequestDTO, images);
+        return watchService.watchToWatchRequestDTO(savedWatch);
+    }
     @PostMapping("/search/watch")
     public List<WatchRequestDTO> searchWatches(@RequestBody WatchSearchRecord filter) {
         return watchService.searchWatches(filter);
@@ -40,11 +46,20 @@ public class WatchController {
 
     @GetMapping("/get/watch")
     public List<WatchRequestDTO> getWatch() {
-        return watchService.getAllWatches().stream().map(watchService::watchToWatchRequestDTO).collect(Collectors.toList());
+        try {
+            List<WatchRequestDTO> l = watchService.getAllWatches()
+                    .stream()
+                    .map(watchService::watchToWatchRequestDTO)
+                    .collect(Collectors.toList());
 
-    
+
+            return l;
+        } catch (Exception e) {
+            e.printStackTrace(); // log full stack trace
+            throw e; // rethrow to preserve the 500 error in frontend
+        }
     }
-    @GetMapping("/get/watch/{watch_id}")
+    @GetMapping("/search/watch/{watch_id}")
     public WatchRequestDTO   getWatch(@RequestParam Integer watch_id ) {
         return watchService.watchToWatchRequestDTO(  watchService.getWatchById(watch_id));
 

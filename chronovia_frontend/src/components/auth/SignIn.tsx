@@ -46,12 +46,14 @@ export const SignIn: React.FC = () => {
 
     try {
       const response = await authService.signIn(formData);
+      console.log(response.token);
       login(response);
 
       if (!response.emailVerified) {
         navigate('/verify-email', { state: { email: response.email } });
       } else {
-        navigate('/dashboard');
+        navigate('/main-page');
+
       }
     } catch (error: any) {
       if (error.response?.data) {
@@ -116,6 +118,7 @@ export const SignIn: React.FC = () => {
                   icon={<Mail className="h-5 w-5 text-[#4A3B39]" />}
                   placeholder="Enter your email or username"
                   required
+                  autoComplete="username"
               />
 
               <div className="relative">
@@ -129,6 +132,7 @@ export const SignIn: React.FC = () => {
                     icon={<Lock className="h-5 w-5 text-[#4A3B39]" />}
                     placeholder="Enter your password"
                     required
+                    autoComplete="current-password"
                 />
                 <button
                     type="button"

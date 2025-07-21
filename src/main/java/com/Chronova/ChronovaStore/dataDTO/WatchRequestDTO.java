@@ -7,6 +7,7 @@ import com.Chronova.ChronovaStore.models.types.WatchType;
 import java.util.List;
 
 public record WatchRequestDTO(
+        Integer id,
         String referenceNumber,
         double price,
         String modelName,
@@ -21,11 +22,11 @@ public record WatchRequestDTO(
 
         // Fields specific to Quartz watches
         String batteryType,
-        boolean isSolar,
+        Boolean isSolar,
         Integer accuracy,
 
         // Fields specific to Mechanical watches
-        boolean isSelfWind,
+        Boolean isSelfWind,
         Integer powerReserveHours,
         Integer jewelCount
 
