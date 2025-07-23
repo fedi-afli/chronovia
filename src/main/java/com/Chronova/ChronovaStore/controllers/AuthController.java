@@ -49,8 +49,8 @@ public class AuthController {
     }
     @GetMapping("/verify-email-redirect")
     public void redirectToEmailVerification(@RequestParam String token, HttpServletResponse response) throws IOException {
-        System.out.println("called");
-        String redirectUrl = "http://localhost:3000/verify-email?token=" + token;
+
+        String redirectUrl = "http://192.168.1.11:3000/verify-email?token=" + token;
         response.sendRedirect(redirectUrl);
     }
         @PostMapping("/request-password-reset")
@@ -60,12 +60,13 @@ public class AuthController {
     }
     @GetMapping("/reset-password-redirect")
     public void redirectToResetPassword(@RequestParam String token, HttpServletResponse response) throws IOException {
-        String redirectUrl = "http://localhost:3000/reset-password?token=" + token;
+        String redirectUrl = "http://192.168.1.11:3000/reset-password?token=" + token;
         response.sendRedirect(redirectUrl);
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<MessageResponseDTO> resetPassword(@RequestBody PasswordResetRequestDTO request) {
+        System.out.println("hit reset password");
         MessageResponseDTO response = authService.resetPassword(request.token(), request.newPassword());
         return ResponseEntity.ok(response);
     }

@@ -73,4 +73,7 @@ public class UserService {
         userRepository.deleteById(userId);
         return true;
     }
+    public String getUserEmailById(Integer userId) {
+        return userRepository.findEmailById(userId);
+    }
 }

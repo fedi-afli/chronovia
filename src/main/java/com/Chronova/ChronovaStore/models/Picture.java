@@ -1,39 +1,31 @@
 package com.Chronova.ChronovaStore.models;
 
-import com.Chronova.ChronovaStore.models.types.PictureId;
 import jakarta.persistence.*;
 
 @Entity
 public class Picture {
 
-    @EmbeddedId
-    private PictureId pictureId;
-
-    @Lob
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "picture_id")
+    private Integer id;
     @Column(name = "image_data", columnDefinition = "bytea")
     private byte[] imageData;
 
-    @MapsId("watchId") // maps the watchId attribute of PictureId
-    @ManyToOne
-    @JoinColumn(name = "watch_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "watch_id", nullable = false)
     private Watch watch;
 
     public Picture() {}
 
-    public Picture(PictureId pictureId, byte[] imageData, Watch watch) {
-        this.pictureId = pictureId;
-        this.imageData = imageData;
-        this.watch = watch;
-    }
-
     // Getters and setters
 
-    public PictureId getPictureId() {
-        return pictureId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setPictureId(PictureId pictureId) {
-        this.pictureId = pictureId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public byte[] getImageData() {
@@ -50,5 +42,9 @@ public class Picture {
 
     public void setWatch(Watch watch) {
         this.watch = watch;
+    }
+
+    public void setPictureId(Integer pictureId) {
+        this.id = pictureId;
     }
 }

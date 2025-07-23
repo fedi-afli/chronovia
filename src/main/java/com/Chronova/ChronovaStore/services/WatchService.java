@@ -30,25 +30,9 @@ public class WatchService {
     }
 
     @Transactional
-    public Watch save(WatchRequestDTO watchRequestDTO, List<MultipartFile> pictureFiles) throws IOException {
-        try {
-            Watch savedWatch = watchRepository.save(watchRequest_to_watch( watchRequestDTO));
-            if (pictureFiles != null && !pictureFiles.isEmpty()) {
-                for (MultipartFile file : pictureFiles) {
-                    Picture picture = new Picture();
-                    picture.setWatch(savedWatch);
-                    picture.setImageData(file.getBytes());
-                    pictureRepository.save(picture);
-                }
-            }
-            return savedWatch;
-        } catch (Exception e) {
-            // Log full stack trace
-            e.printStackTrace();
-            throw e;
-        }
+    public Watch save(WatchRequestDTO watchRequestDTO) {
+        return watchRepository.save(watchRequest_to_watch(watchRequestDTO));
     }
-
     public List<Watch> getAllWatches() {
         return watchRepository.findAll();
 

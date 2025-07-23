@@ -52,7 +52,7 @@ export const RequestPasswordReset: React.FC = () => {
             const response = await authService.resetPassword({token, newPassword: formData.password});
             if (response.success) {
                 setMessage({ type: 'success', text: response.message });
-                setTimeout(() => navigate('/signin'), 3000);
+                setTimeout(() => navigate('/'), 3000);
             } else {
                 setMessage({ type: 'error', text: response.message });
             }

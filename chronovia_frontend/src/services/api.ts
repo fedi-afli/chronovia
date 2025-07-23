@@ -2,7 +2,6 @@ import type {
   CartLignRequestDTO,
   Order,
   OrderRequestDTO,
-  Picture,
   User,
   Watch,
   WatchSearchRecord,
@@ -15,14 +14,17 @@ const TOKEN_KEY = "jwt_token";
 
 // Get JWT token from localStorage
 const getAuthToken = (): string | null => {
+
   return localStorage.getItem(TOKEN_KEY);
 };
 
 // Create headers with authentication if needed
-const getHeaders = (includeAuth = true): HeadersInit => {
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-  };
+const getHeaders = (includeAuth = true, hasBody = false): HeadersInit => {
+  const headers: HeadersInit = {};
+
+  if (hasBody) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (includeAuth) {
     const token = getAuthToken();
@@ -33,34 +35,50 @@ const getHeaders = (includeAuth = true): HeadersInit => {
 
   return headers;
 };
-
 // Generic API request function with error handling
 const apiRequest = async <T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    includeAuth: boolean = true // ← option ajoutée ici pour forcer ou non l’auth
 ): Promise<T> => {
+  const hasBody = !!options.body;
+
+  const headers: HeadersInit = {
+    ...(options.headers || {}),
+    ...(hasBody ? { "Content-Type": "application/json" } : {}),
+  };
+
+  if (includeAuth) {
+    const token = localStorage.getItem("jwt_token");
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
-    headers: {
-      ...getHeaders(),
-      ...options.headers,
-    },
+    headers,
   });
 
+  console.log(`[API] ${options.method || 'GET'} ${endpoint}`, { headers });
+
   if (!response.ok) {
-    // You can customize error handling here, e.g., parse JSON error response
+    const errorText = await response.text();
+    console.error(`API Error: ${response.status}`, errorText);
     throw new Error(`API Error: ${response.status} ${response.statusText}`);
   }
 
   return response.json();
 };
 
+
+
 // Watch API Services
 export const watchAPI = {
   getAllWatches: () => apiRequest<Watch[]>("/get/watch", { method: "GET" }),
 
   getWatchById: (watchId: number) =>
-      apiRequest<Watch>(`/get/watch/${watchId}`, { method: "GET" }),
+      apiRequest<Watch>(`/search/watch/${watchId}`, { method: "GET" }),
 
   searchWatches: (filter: WatchSearchRecord) =>
       apiRequest<Watch[]>("/search/watch", {
@@ -68,14 +86,52 @@ export const watchAPI = {
         body: JSON.stringify(filter),
       }),
 
-  getWatchPictures: (watchId: number) =>
-      apiRequest<Picture[]>(`/get/watch/picture/${watchId}`, { method: "GET" }),
-
-  saveWatch: (watch: Watch) =>
-      apiRequest<Watch>("/save/watch", {
-        method: "POST",
-        body: JSON.stringify(watch),
+  getWatchPictures: (watchId: number, options?: RequestInit) =>
+      apiRequest<string[]>(`/get/watch/picture/${watchId}`, {
+        method: "GET",
+        ...options
       }),
+
+
+// Save the watch data without images
+  saveWatchData: (watchData: object) => {
+    const token = getAuthToken();
+
+    return fetch(`${API_BASE_URL}/save/watch`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(watchData),
+    }).then(async (res) => {
+      if (!res.ok) throw new Error(`API Error: ${res.status}`);
+      return res.json(); // Assuming this returns the saved watch with an ID
+    });
+  },
+
+// Upload images for a specific watchId
+  uploadWatchPictures: (watchId: number, files: FileList) => {
+    const token = getAuthToken();
+    const formData = new FormData();
+
+    Array.from(files).forEach(file => {
+      formData.append('images', file);
+    });
+
+    return fetch(`${API_BASE_URL}/save/watch/${watchId}/images`, {
+      method: 'POST',
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        // Note: No 'Content-Type' header here, let browser set it
+      },
+      body: formData,
+    }).then(async (res) => {
+      if (!res.ok) throw new Error(`API Error: ${res.status}`);
+      return res.json();
+    });
+  },
+
 
   deleteWatch: (watchId: number) =>
       apiRequest<boolean>(`/delete/watch/${watchId}`, { method: "DELETE" }),
@@ -83,30 +139,62 @@ export const watchAPI = {
 
 // Cart API Services
 export const cartAPI = {
-  getCart: (userId: number) =>
-      apiRequest<Cart>(`/get/cart/${userId}`, { method: "GET" }),
+  getCart: async (userId: number): Promise<Cart> => {
+    const raw = await apiRequest<any>(`/get/cart/${userId}`, { method: "GET" });
 
-  addToCart: (userId: number, cartItem: CartLignRequestDTO) =>
-      apiRequest<Cart>(`/add/product/${userId}`, {
-        method: "POST",
-        body: JSON.stringify(cartItem),
-      }),
+    return {
+      cartItems: raw.cartLigns ?? [], // ← Fix mapping
+      total: raw.total ?? 0,
+      userID: raw.userID,
+    };
+  },
+
+  addToCart: async (userId: number, cartItem: CartLignRequestDTO): Promise<Cart> => {
+    const raw = await apiRequest<any>(`/add/product/${userId}`, {
+      method: "POST",
+      body: JSON.stringify(cartItem),
+    });
+
+    return {
+      cartItems: raw.cartLigns ?? [],
+      total: raw.total ?? 0,
+      userID: raw.userID,
+    };
+  },
+  updateQuantity: async (userId: number, cartItem: CartLignRequestDTO): Promise<void> => {
+    await apiRequest(`/cart/product-quatity/${userId}`, {
+      method: "POST",
+      body: JSON.stringify(cartItem),
+    });
+  },
+
+  removeItem: async (userId: number, cartItem: CartLignRequestDTO): Promise<void> => {
+    await apiRequest(`/remove/product/${userId}`, {
+      method: "POST",
+      body: JSON.stringify(cartItem),
+    });
+  },
+
 };
 
 // Order API Services
+
+
 export const orderAPI = {
   confirmOrder: (order: OrderRequestDTO) =>
-      apiRequest<Order>("/order/confirm", {
+      apiRequest<OrderRequestDTO>("/order/confirm", {
         method: "POST",
         body: JSON.stringify(order),
       }),
 
   getUserOrders: (userId: number) =>
-      apiRequest<Order[]>(`/orders/${userId}`, { method: "POST" }),
+      apiRequest<OrderRequestDTO[]>(`/orders/${userId}`, { method: "POST" }),  // keep POST if backend requires
 
   confirmCart: (userId: number) =>
-      apiRequest<Order>(`/order/confirm/${userId}`, { method: "GET" }),
+      apiRequest<OrderRequestDTO>(`/order/confirm/${userId}`, { method: "GET" }),
 };
+
+
 
 // User API Services
 export const userAPI = {
@@ -115,7 +203,7 @@ export const userAPI = {
   getUserById: (userId: number) =>
       apiRequest<User>(`/search/user/${userId}`, { method: "GET" }),
 
-  searchUsers: (filter: any) =>
+  searchUsers: (filter: User) =>
       apiRequest<User[]>("/search/users", {
         method: "POST",
         body: JSON.stringify(filter),
@@ -128,7 +216,7 @@ export const userAPI = {
 // Auth helper functions
 export const authAPI = {
   setToken: (token: string) => {
-    localStorage.clear()
+
     localStorage.setItem(TOKEN_KEY, token);
   },
 
@@ -155,7 +243,7 @@ export const authAPI = {
               .join("")
       );
       const payload = JSON.parse(jsonPayload);
-
+      console.log("payload :"+payload);
       // Map payload properties to User type fields - adjust if your token uses different keys
       return {
         id: payload.id ?? 0,
@@ -171,12 +259,4 @@ export const authAPI = {
       return null;
     }
   },
-};
-
-export default {
-  watchAPI,
-  cartAPI,
-  orderAPI,
-  userAPI,
-  authAPI,
 };

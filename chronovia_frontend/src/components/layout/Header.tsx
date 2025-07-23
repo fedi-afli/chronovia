@@ -107,7 +107,7 @@ const Header: React.FC<HeaderProps> = ({
                                         </>
                                     ) : (
                                         <>
-                                            <a href="/signin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <a href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                                 Sign In
                                             </a>
                                             <a href="/signup" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

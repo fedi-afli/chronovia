@@ -1,5 +1,6 @@
 package com.Chronova.ChronovaStore.security;
 
+import com.Chronova.ChronovaStore.models.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +26,11 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(User userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("id", userDetails.getId());
+        claims.put("role", userDetails.getRole().name());
+
         return createToken(claims, userDetails.getUsername());
     }
 

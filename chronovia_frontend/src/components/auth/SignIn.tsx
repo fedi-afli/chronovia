@@ -46,7 +46,7 @@ export const SignIn: React.FC = () => {
 
     try {
       const response = await authService.signIn(formData);
-      console.log(response.token);
+
       login(response);
 
       if (!response.emailVerified) {

@@ -30,11 +30,11 @@ public class Cart {
 
 
 
-    public Double getCartTotalPrice() {
+    public void setCartTotalPrice() {
         this.total = cartLigns.stream()
                 .map(CartLign::calculateTotal)
                 .reduce(0.0, Double::sum);
-        return total;
+
     }
 
     public Integer getCartId() {

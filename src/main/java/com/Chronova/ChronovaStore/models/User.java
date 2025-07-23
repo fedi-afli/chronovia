@@ -21,7 +21,24 @@ public class User implements UserDetails {
     private String password;
 
     private String username;
-    
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_id=" + user_id +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", enabled=" + enabled +
+                ", accountNonExpired=" + accountNonExpired +
+                ", accountNonLocked=" + accountNonLocked +
+                ", role=" + role +
+                ", cart=" + cart +
+                ", createdAt=" + createdAt +
+                ", lastLoginAt=" + lastLoginAt +
+                '}';
+    }
+
     @Column(unique = true)
     private String email;
     

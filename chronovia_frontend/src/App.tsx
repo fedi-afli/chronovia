@@ -9,14 +9,12 @@ import { Dashboard } from './components/Dashboard';
 import {RequestPasswordResetEmail} from "./components/auth/RequestPasswordResetEmail.tsx";
 import {RequestPasswordReset} from "./components/auth/RequestPasswordReset.tsx";
 import MainPage from "./components/layout/MainPage.tsx";
-import WatchAddForm from "./components/layout/watches/WatchAddForm.tsx";
-import {useEffect} from "react";
+import WatchAddForm from "./components/watches/WatchAddForm.tsx";
+
+
 
 
   const App = () => {
-    useEffect(() => {
-      localStorage.clear();
-    }, []);
 
     return (
     <AuthProvider>
@@ -31,6 +29,7 @@ import {useEffect} from "react";
               <Route path="/reset-password" element={<RequestPasswordReset />} />
             <Route path="/main-page" element={<MainPage />} />
             <Route path="/add-watch" element={<WatchAddForm />} />
+
             
             {/* Protected Routes */}
             <Route 

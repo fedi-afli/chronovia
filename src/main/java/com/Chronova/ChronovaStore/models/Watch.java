@@ -15,8 +15,7 @@ public class Watch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer watch_id;
 
-    @OneToOne(mappedBy = "watch")
-    private CartLign cartLign;
+
 
     private String referenceNumber;
     private double price;

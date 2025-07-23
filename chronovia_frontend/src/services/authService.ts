@@ -37,7 +37,7 @@ export const authService = {
         // Store token in localStorage
         if (response.data.token) {
           localStorage.setItem('token', response.data.token);
-          console.log("🔐 Token saved:", response.data.token);
+
         } else {
           console.warn("❌ No token received");
         }

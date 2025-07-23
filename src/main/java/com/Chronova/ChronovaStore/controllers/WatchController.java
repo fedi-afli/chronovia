@@ -22,22 +22,20 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class WatchController {
     private final WatchService watchService;
-    private final PictureService pictureService;
 
 
-    public WatchController(WatchService watchService, WatchRepository watchRepository, PictureService pictureService) {
+
+    public WatchController(WatchService watchService) {
         this.watchService = watchService;
-        this.pictureService = pictureService;
+
     }
 
-    
+
     @PostMapping("/save/watch")
     public WatchRequestDTO saveWatch(
-            @RequestPart("watch") WatchRequestDTO watchRequestDTO,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
+            @RequestBody WatchRequestDTO watchRequestDTO){
+        return watchService.watchToWatchRequestDTO( watchService.save(watchRequestDTO));
 
-        Watch savedWatch = watchService.save(watchRequestDTO, images);
-        return watchService.watchToWatchRequestDTO(savedWatch);
     }
     @PostMapping("/search/watch")
     public List<WatchRequestDTO> searchWatches(@RequestBody WatchSearchRecord filter) {
@@ -60,7 +58,8 @@ public class WatchController {
         }
     }
     @GetMapping("/search/watch/{watch_id}")
-    public WatchRequestDTO   getWatch(@RequestParam Integer watch_id ) {
+    public WatchRequestDTO   getWatch(@PathVariable Integer watch_id ) {
+
         return watchService.watchToWatchRequestDTO(  watchService.getWatchById(watch_id));
 
 
@@ -70,11 +69,7 @@ public class WatchController {
        return   watchService.deleteWatch(watch_id);
     }
 
-    @GetMapping("get/watch/picture/{watch_id}")
-    public List<Picture>   getAllPictures(@RequestParam Integer watch_id ) {
-        return pictureService.findAllPictures(watch_id);
 
-    }
 
 
 

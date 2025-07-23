@@ -33,7 +33,7 @@ export const EmailVerification: React.FC = () => {
         setMessage({ type: 'success', text: response.message });
         setIsVerified(true);
         setTimeout(() => {
-          navigate('/signin');
+          navigate('/');
         }, 3000);
       } else {
         setMessage({ type: 'error', text: response.message });
@@ -144,7 +144,7 @@ export const EmailVerification: React.FC = () => {
 
               <div className="text-center pt-4 border-t">
                 <Button
-                  onClick={() => navigate('/signin')}
+                  onClick={() => navigate('/')}
                   variant="ghost"
                   size="md"
                 >

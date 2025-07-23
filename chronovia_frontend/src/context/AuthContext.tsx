@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored auth data on app load
+
     const storedToken = localStorage.getItem('jwt_token');
     const storedUser = localStorage.getItem('user');
 
@@ -61,6 +61,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // ✅ Save to localStorage
     localStorage.setItem('jwt_token', authResponse.token);
+
     localStorage.setItem('user', JSON.stringify(userData));
 
     console.log("✅ Token saved:", authResponse.token);

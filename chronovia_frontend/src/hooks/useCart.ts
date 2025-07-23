@@ -53,6 +53,38 @@ export const useCart = () => {
     }
   };
 
+  const removeItem = async (watchId: number) => {
+    if (!user) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const updatedCart = await cartAPI.removeItem(user.id, watchId);
+      setCart(updatedCart);
+    } catch {
+      setError('Failed to remove item');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const changeQuantity = async (watchId: number, quantity: number) => {
+    if (!user) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const updatedCart = await cartAPI.changeQuantity(user.id, watchId, quantity);
+      setCart(updatedCart);
+    } catch {
+      setError('Failed to update quantity');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getTotalItems = () => {
     return cart?.cartItems.reduce((total, item) => total + item.quantity, 0) || 0;
   };
@@ -66,6 +98,8 @@ export const useCart = () => {
     loading,
     error,
     addToCart,
+    removeItem,
+    changeQuantity,
     getTotalItems,
     getTotalPrice,
     loadCart,

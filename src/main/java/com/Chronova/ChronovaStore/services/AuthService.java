@@ -104,6 +104,7 @@ public class AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
+        System.err.println(user);
 
         // Update last login
         user.setLastLoginAt(LocalDateTime.now());
